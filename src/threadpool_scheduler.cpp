@@ -192,6 +192,7 @@ static void thread_task_loop(threadpool_data* impl, std::size_t thread_id, task_
 
 		// Try to get a task from the local queue
 		if (task_run_handle t = current_thread.queue.pop()) {
+        		AUTORELEASE_SCOPE_GUARD();
 			t.run();
 			continue;
 		}
@@ -200,6 +201,7 @@ static void thread_task_loop(threadpool_data* impl, std::size_t thread_id, task_
 		while (true) {
 			// Try to steal a task
 			if (task_run_handle t = steal_task(impl, thread_id)) {
+        			AUTORELEASE_SCOPE_GUARD();
 				t.run();
 				break;
 			}
@@ -209,6 +211,7 @@ static void thread_task_loop(threadpool_data* impl, std::size_t thread_id, task_
 			if (task_run_handle t = impl->public_queue.pop()) {
 				// Don't hold the lock while running the task
 				locked.unlock();
+        			AUTORELEASE_SCOPE_GUARD();
 				t.run();
 				break;
 			}
