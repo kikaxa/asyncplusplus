@@ -88,6 +88,26 @@
 #endif
 #endif
 
+#ifdef __APPLE__
+// Use the direct runtime interface to manage autorelease pools, as it
+// has less overhead then allocating NSAutoreleasePools, and allows for
+// a future where we use ARC (where NSAutoreleasePool is not allowed).
+// https://clang.llvm.org/docs/AutomaticReferenceCounting.html#runtime-support
+extern "C" {
+    void *objc_autoreleasePoolPush(void);
+    void objc_autoreleasePoolPop(void *pool);
+}
+namespace {
+struct AppleAutoreleasePoolGuard
+{   void* pool = objc_autoreleasePoolPush();
+    ~AppleAutoreleasePoolGuard() { objc_autoreleasePoolPop(pool); }
+};
+}
+    #define AUTORELEASE_SCOPE_GUARD() auto poolGuard = ::AppleAutoreleasePoolGuard{};
+#else
+    #define AUTORELEASE_SCOPE_GUARD()
+#endif
+
 // Include other internal headers
 #include "singleton.h"
 #include "task_wait_event.h"
