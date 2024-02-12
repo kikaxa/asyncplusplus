@@ -62,6 +62,11 @@ set(ASYNCXX_SRC
 source_group(include FILES ${PROJECT_SOURCE_DIR}/include/async++.h ${ASYNCXX_INCLUDE})
 source_group(src FILES ${ASYNCXX_SRC})
 add_library(Async++ ${PROJECT_SOURCE_DIR}/include/async++.h ${ASYNCXX_INCLUDE} ${ASYNCXX_SRC})
+set_target_properties(Async++ PROPERTIES
+		  CXX_STANDARD 14
+		  CXX_STANDARD_REQUIRED ON
+		  CXX_EXTENSIONS OFF
+		  )
 
 # Async++ only depends on the C++11 standard libraries, but some implementations
 # require the -pthread compiler flag to enable threading functionality.
