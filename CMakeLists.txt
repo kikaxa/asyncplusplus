@@ -70,9 +70,6 @@ set_target_properties(Async++ PROPERTIES
 
 # Async++ only depends on the C++11 standard libraries, but some implementations
 # require the -pthread compiler flag to enable threading functionality.
-if (NOT MSVC)
-	target_compile_options(Async++ PRIVATE -std=c++11)
-endif()
 if (APPLE)
 	# Use libc++ on Mac because the shipped libstdc++ version is ancient
 	target_compile_options(Async++ PRIVATE -stdlib=libc++)
