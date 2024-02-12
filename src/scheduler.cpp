@@ -180,6 +180,7 @@ void thread_scheduler_impl::schedule(task_run_handle t)
 	// A shared_ptr is used here because not all implementations of
 	// std::thread support move-only objects.
 	std::thread([](const std::shared_ptr<task_run_handle>& t) {
+		AUTORELEASE_SCOPE_GUARD();
 		t->run();
 	}, std::make_shared<task_run_handle>(std::move(t))).detach();
 }
